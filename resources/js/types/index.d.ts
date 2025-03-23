@@ -53,3 +53,15 @@ export interface Project {
 
     [key: string]: unknown;
 }
+
+export interface TimeEntry {
+    id: number;
+    project_id: number;
+    user_id: number;
+    start_time: string;
+    end_time: string;
+    duration: number;
+    duration_formatted: string;
+    created_at: string;
+    updated_at: string;
+}

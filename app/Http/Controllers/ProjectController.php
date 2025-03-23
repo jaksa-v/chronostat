@@ -42,9 +42,9 @@ class ProjectController extends Controller
      */
     public function show(Project $project): Response
     {
-
         return Inertia::render('projects/show', [
             'project' => $project,
+            'timeEntries' => $project->timeEntries()->orderBy('start_time', 'desc')->get(),
         ]);
     }
 
