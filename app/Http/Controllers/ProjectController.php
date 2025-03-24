@@ -14,7 +14,7 @@ class ProjectController extends Controller
      */
     public function index(): Response
     {
-        $projects = Project::all();
+        $projects = Auth()->user()->projects()->orderBy('created_at', 'desc')->get();
 
         return Inertia::render('dashboard', [
             'projects' => $projects,
