@@ -25,7 +25,7 @@ class TimeEntry extends Model
     {
         static::saving(function ($timeEntry) {
             if ($timeEntry->start_time && $timeEntry->end_time) {
-                $timeEntry->duration = $timeEntry->start_time->diffInSeconds($timeEntry->end_time);
+                $timeEntry->duration = $timeEntry->start_time->diffInMinutes($timeEntry->end_time);
             }
         });
     }
@@ -36,8 +36,7 @@ class TimeEntry extends Model
             return '0m';
         }
 
-        $diffInSeconds = $this->start_time->diffInSeconds($this->end_time);
-        $diffInMinutes = floor($diffInSeconds / 60);
+        $diffInMinutes = $this->start_time->diffInMinutes($this->end_time);
         $hours = floor($diffInMinutes / 60);
         $minutes = $diffInMinutes % 60;
 

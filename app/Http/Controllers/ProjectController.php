@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Project;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -14,7 +15,10 @@ class ProjectController extends Controller
      */
     public function index(): Response
     {
-        $projects = Auth()->user()->projects()->orderBy('created_at', 'desc')->get();
+        $projects = Auth::user()->projects()
+            ->withSum('timeEntries', 'duration')
+            ->orderBy('created_at', 'desc')
+            ->get();
 
         return Inertia::render('dashboard', [
             'projects' => $projects,
