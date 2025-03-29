@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\TimeHelper;
 use Database\Factories\TimeEntryFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -26,26 +27,19 @@ class TimeEntry extends Model
         static::saving(function ($timeEntry) {
             if ($timeEntry->start_time && $timeEntry->end_time) {
                 $timeEntry->duration = $timeEntry->start_time->diffInMinutes($timeEntry->end_time);
+            } else {
+                $timeEntry->duration = 0;
             }
         });
     }
 
+    /**
+     * Get the duration formatted as a human-readable string (e.g., '2h 30m').
+     * Uses the TimeHelper utility.
+     */
     public function getDurationFormattedAttribute(): string
     {
-        if (! $this->start_time || ! $this->end_time) {
-            return '0m';
-        }
-
-        $diffInMinutes = $this->start_time->diffInMinutes($this->end_time);
-        $hours = floor($diffInMinutes / 60);
-        $minutes = $diffInMinutes % 60;
-
-        if ($hours > 0) {
-            return "{$hours}h {$minutes}m";
-        }
-
-        return "{$diffInMinutes}m";
-
+        return TimeHelper::formatDurationFromMinutes($this->duration ?? 0);
     }
 
     public function project(): BelongsTo
